@@ -1,9 +1,23 @@
-const { GeneralSuccess } = require('./GeneralSuccess');
-const {} = require('../../httpCodes');
-const { model } = require('mongoose');
+const { GeneralSuccess } = require('./generalSuccess');
+const { OK, CREATED } = require('../../httpCodes');
 
+class Ok extends GeneralSuccess {
+  constructor(message, data = undefined) {
+    super(OK, message, data);
+  }
+}
+class Created extends GeneralSuccess {
+  constructor(message, data = undefined) {
+    super(CREATED, message, data);
+  }
+}
 /**
- * @type {
- * }
+ * @type {{
+ *  Ok:Ok,
+ *  Created:Created,
+ * }}
  */
-module.exports = {};
+module.exports = {
+  Ok,
+  Created,
+};
