@@ -1,6 +1,6 @@
 const User = require('../../../model/user');
 const Verification = require('../../../model/verification');
-
+const jwt = require('../../../utils/jwt');
 module.exports.verifyEmail = async (data) => {
   const { verificationCode, _id } = data;
   try {
@@ -31,4 +31,32 @@ module.exports.verifyEmail = async (data) => {
   }
 };
 
-module.exports.verifyRefreshToken = async () => {};
+module.exports.verifyRefreshToken = async (data) => {
+  const { refreshToken } = data;
+  try {
+    const token = jwt.verifyRefreshToken(refreshToken);
+
+    if (!token) {
+      return { code: 1, message: 'invalidToken' };
+    }
+    const accessToken = jwt.createAccessToken({
+      id: token.data.id,
+      role: token.data.role,
+    });
+    const newRefreshToken = jwt.createRefreshToken({
+      id: token.data.id,
+      role: token.data.role,
+    });
+    return {
+      code: 0,
+      message: 'commonSuccess.message',
+      data: {
+        accessToken,
+        refreshToken: newRefreshToken,
+      },
+    };
+  } catch (err) {
+    console.log(err);
+    return { code: 1, message: 'invalidToken' };
+  }
+};

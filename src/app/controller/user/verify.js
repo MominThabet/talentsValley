@@ -28,4 +28,18 @@ module.exports.verifyEmail = async (req, res, next) => {
     return next(new InternalServerError(err));
   }
 };
-module.exports.verifyRefreshToken = async () => {};
+module.exports.verifyRefreshToken = async (req, res, next) => {
+  const { refreshToken } = req.body;
+  try {
+    const { message, data, code } = await verifyRefreshToken({
+      refreshToken,
+    });
+    if (code === 0) {
+      return next(new Ok(message, data));
+    }
+    return next(new BadRequest(message));
+  } catch (err) {
+    console.log(err);
+    return next(new InternalServerError(req));
+  }
+};

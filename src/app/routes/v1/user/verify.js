@@ -16,10 +16,10 @@ router.post(
   [verify, validateRequest],
   controller.verifyEmail
 );
-// router.post(
-//   '/refresh-token',
-//   [verifyToken, validateRequest],
-//   controller.verifyRefreshToken
-// );
+router.post(
+  '/refresh-token',
+  [verifyToken, validateRequest],
+  controller.verifyRefreshToken
+);
 
 module.exports = router;
