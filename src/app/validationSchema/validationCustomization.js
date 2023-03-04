@@ -8,3 +8,7 @@ module.exports.exists = {
   },
   errorMessage: () => 'required',
 };
+
+module.exports.isInt = {
+  errorMessage: () => 'mustBeInt',
+};

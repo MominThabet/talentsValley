@@ -19,7 +19,7 @@ router.post('/login', [login, validateRequest], controller.login);
 router.post('/send-code-email', isAuthenticated, controller.sendCodeToEmail);
 
 // router.use('/password', require('./password'));
-// router.use('/verify', require('./verify'));
+router.use('/verify', require('./verify'));
 // router.use('/upload', require('./upload'));
 
 module.exports = router;
