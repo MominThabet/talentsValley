@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 require('dotenv').config();
 
 const PORT = process.env.PORT;
+
 const startServer = async () => {
   await connectDB();
   app.listen(PORT, () => {
