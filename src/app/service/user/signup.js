@@ -1,7 +1,12 @@
 const bcrypt = require('bcrypt');
 const User = require('../../../model/user');
+const Verification = require('../../../model/verification');
 const jwt = require('../../../utils/jwt');
+const {
+  sendVerificationCodeEmail,
+} = require('../../../utils/notification/email');
 require('dotenv').config();
+
 module.exports.signup = async (data) => {
   try {
     const { firstName, lastName, email, country, password, mobile } = data;
@@ -41,5 +46,40 @@ module.exports.signup = async (data) => {
   } catch (e) {
     console.log(e);
     throw new Error(e);
+  }
+};
+
+module.exports.sendCodeToEmail = async (data) => {
+  const { _id } = data;
+  try {
+    const user = await User.findOne({ _id, isDeleted: false });
+    if (!user) {
+      return { code: 1, message: 'user.notFoundUser', data: null };
+    }
+
+    const code = Math.floor(Math.random() * 10 ** 7);
+
+    let verification = await Verification.findOne({
+      userId: _id,
+      email: user.email,
+    });
+
+    if (!verification) {
+      verification = new Verification({ userId: _id, email: user.email });
+      verification = await verification.save();
+    }
+    verification.verificationCode = code;
+    await verification.save();
+
+    sendVerificationCodeEmail(user.email, code);
+
+    return {
+      code: 0,
+      message: 'commonSuccess.message',
+      data: { _id, email: user.email },
+    };
+  } catch (err) {
+    console.log(err);
+    throw new Error(err);
   }
 };

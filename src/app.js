@@ -1,5 +1,5 @@
 const express = require('express');
-
+const cors = require('cors');
 const { handleSuccess } = require('../src/utils/responses/success');
 const { handleError } = require('../src/utils/responses/error');
 
@@ -10,7 +10,7 @@ app.disable('X-Powered-By');
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-
+app.use(cors());
 app.get('/', (req, res, next) => {
   next(new Created('hi', 'blue'));
 });
