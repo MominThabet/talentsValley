@@ -42,7 +42,7 @@ const userSchema = new mongoose.Schema(
     verifiedAddress: {
       status: {
         type: String,
-        default: 'not_uploaded',
+        default: 'approved',
         enum: ['not_uploaded', 'pending', 'approved', 'rejected'],
       },
       addressDocumentType: {
@@ -71,7 +71,7 @@ const userSchema = new mongoose.Schema(
     verifiedId: {
       status: {
         type: String,
-        default: 'not_uploaded',
+        default: 'approved',
         enum: ['not_uploaded', 'pending', 'approved', 'rejected'],
       },
       idDocumentType: {
@@ -93,11 +93,11 @@ const userSchema = new mongoose.Schema(
     },
     verifiedEmail: {
       type: Boolean,
-      default: false,
+      default: true,
     },
     verifiedMobile: {
       type: Boolean,
-      default: false,
+      default: true,
     },
     isBlocked: {
       type: Boolean,

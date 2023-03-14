@@ -25,6 +25,8 @@ module.exports.isAuthenticated = async (req, res, next) => {
     }
 
     const user = await User.findOne({ _id: decodedToken.data.id });
+    console.log('decodedToken', decodedToken);
+    console.log('decodedToken.data', decodedToken.data);
     if (!user) {
       return next(new Unauthorized('Unauthorized'));
     }
