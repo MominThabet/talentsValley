@@ -15,7 +15,7 @@ const {
 
 module.exports.getAllRecipient = async (req, res, next) => {
   try {
-    const { code, message, data } = await getAllRecipient();
+    const { code, message, data } = await getAllRecipient(req.user);
     if (code === 0) {
       return next(new Ok(message, data));
     }
@@ -69,7 +69,7 @@ module.exports.editRecipient = async (req, res, next) => {
 
 module.exports.deleteRecipient = async (req, res, next) => {
   try {
-    const { code, message, data } = await deleteRecipient();
+    const { code, message, data } = await deleteRecipient(req.params.id);
     if (code === 0) {
       return next(new Ok(message, data));
     }

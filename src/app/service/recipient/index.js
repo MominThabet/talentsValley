@@ -20,6 +20,7 @@ module.exports.addRecipient = async (data, user) => {
       return { code: 2, message: 'Wrong Verification Code', data: null };
     }
     const isRecipient = await Recipient.findOne({
+      userId: user._id,
       recipientId,
       isDeleted: false,
     });
@@ -57,6 +58,7 @@ module.exports.editRecipient = async (id, data, user) => {
       return { code: 2, message: 'Wrong Verification Code', data: null };
     }
     const recipient = await Recipient.findOne({
+      userId: user._id,
       _id: id,
       isDeleted: false,
     });
@@ -73,15 +75,65 @@ module.exports.editRecipient = async (id, data, user) => {
     throw new Error(error);
   }
 };
-module.exports.deleteRecipient = async (data) => {};
+module.exports.deleteRecipient = async (id) => {
+  try {
+    const recipient = await Recipient.findOne({
+      userId: user._id,
+      _id: id,
+      isDeleted: false,
+    });
+    if (!recipient) {
+      return { code: 1, message: "recipient Doesn't exist", data: null };
+    }
+    recipient.isDeleted = true;
+    await recipient.save();
+    return { code: 0, message: 'recipient deleted', data: null };
+  } catch (error) {
+    console.log(error);
+    throw new Error(error);
+  }
+};
 
-module.exports.getAllRecipient = async (data) => {};
-module.exports.getRecipient = async (data) => {};
+module.exports.getAllRecipient = async (user) => {
+  try {
+    const recipients = await Recipient.find({
+      userId: user._id,
+      isDeleted: false,
+    });
+    if (recipients.length == 0) {
+      return { code: 1, message: 'no recipients', data: null };
+    }
+    return { code: 0, message: 'all recipients', data: recipients };
+  } catch (error) {
+    console.log(error);
+    throw new Error(error);
+  }
+};
+module.exports.getRecipient = async (id) => {
+  try {
+    const recipient = await Recipient.findOne({
+      _id: id,
+      isDeleted: false,
+    });
+    if (!recipient) {
+      return { code: 1, message: "recipient dosen't exist", data: null };
+    }
+    return {
+      code: 0,
+      message: 'success',
+      data: { recipient },
+    };
+  } catch (error) {
+    console.log(error);
+    throw new Error(error);
+  }
+};
 
 module.exports.sendCode = async (data, user) => {
   try {
     const { name, phone, recipientId } = data;
     const isRecipient = await Recipient.findOne({
+      userId: user._id,
       recipientId,
       isDeleted: false,
     });
@@ -117,6 +169,7 @@ module.exports.sendCodeEdit = async (id, data, user) => {
   try {
     const { name, phone, recipientId } = data;
     const isRecipient = await Recipient.findOne({
+      userId: user._id,
       _id: id,
       isDeleted: false,
     });
