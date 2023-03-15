@@ -2,7 +2,7 @@ const { verifyAccessToken } = require('../../jwt');
 const { AccessDenied, Unauthorized } = require('../../responses/error/errors');
 const User = require('../../../model/user');
 
-module.exports.isAuthenticated = async (req, res, next) => {
+async function isAuthenticated(req, res, next) {
   const authorization = req.headers.authorization;
   if (!authorization) {
     return next(new Unauthorized('Unauthorized'));
@@ -43,4 +43,31 @@ module.exports.isAuthenticated = async (req, res, next) => {
     console.log(err);
     return next(new Unauthorized('Unauthorized'));
   }
+}
+
+async function isTeamAuth(req, res, next) {
+  if (req.user.role == 1) {
+    return next();
+  }
+  return next(new Unauthorized('not A team member'));
+}
+
+async function isAuthVerified(req, res, next) {
+  if (req.user.verifiedEmail && req.user.verifiedMobile) {
+    return next();
+  }
+  return next(new Unauthorized('email or mobile not verified'));
+}
+async function isAddressApproved(req, res, next) {
+  if (req.user.verifiedAddress.status === 'approved') {
+    return next();
+  }
+  return next(new Unauthorized('address not verified'));
+}
+
+module.exports = {
+  isAuthenticated,
+  isTeamAuth,
+  isAuthVerified,
+  isAddressApproved,
 };
