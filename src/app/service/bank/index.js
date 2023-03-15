@@ -38,7 +38,6 @@ module.exports.addBank = async (data, user) => {
       bankAccountOwner,
       branch,
       accountNumber,
-      currency,
       ledger,
     });
     return {

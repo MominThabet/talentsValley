@@ -1,5 +1,6 @@
 const { checkSchema } = require('express-validator');
 const { exists, isString } = require('../validationCustomization');
+// TODO: I believe this need to be modified
 module.exports.bank = checkSchema({
   bankAccountOwner: {
     in: 'body',

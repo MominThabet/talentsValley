@@ -16,4 +16,5 @@ router.use(isAuthenticated, isAuthVerified, isAddressApproved);
 router.use('/office', require('./v1/office'));
 router.use('/recipient', require('./v1/recipient'));
 router.use('/bank', require('./v1/bank'));
+router.use('/withdrawal', require('./v1/withdrawal'));
 module.exports = router;
