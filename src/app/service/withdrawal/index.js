@@ -12,6 +12,13 @@ module.exports.getAllWithdraws = async (data) => {
 };
 module.exports.getWithdraw = async (id) => {
   try {
+    const withdraw = await Withdrawal.findOne({
+      _id: id,
+    });
+    if (!withdraw) {
+      return { code: 1, message: "witdraw dosen't exist", data: null };
+    }
+    return { code: 0, message: 'Success', data: { withdraw } };
   } catch (error) {
     console.log(error);
     throw new Error(error);
@@ -94,8 +101,15 @@ module.exports.cancelWithdraw = async (data) => {
     throw new Error(error);
   }
 };
-module.exports.getLastWithdraw = async (data) => {
+module.exports.getLastWithdraw = async (user) => {
   try {
+    const lastWithdraw = await Withdrawal.find({ userId: user._id })
+      .sort({ createdAt: -1 })
+      .limit(1);
+    if (!lastWithdraw) {
+      return { code: 1, message: 'no past withdawals', data: null };
+    }
+    return { code: 0, message: 'last Withdrawal', data: { lastWithdraw } };
   } catch (error) {
     console.log(error);
     throw new Error(error);

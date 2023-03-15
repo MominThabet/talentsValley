@@ -4,7 +4,7 @@ const {
   addWithdraw,
   cancelWithdraw,
   getLastWithdraw,
-  confirmReceipt,
+  confirmWithdrawal,
   report,
 } = require('../../service/withdrawal');
 const { Ok } = require('../../../utils/responses/success/successes');
@@ -62,7 +62,7 @@ module.exports.cancelWithdraw = async (req, res, next) => {
 };
 module.exports.getLastWithdraw = async (req, res, next) => {
   try {
-    const { code, message, data } = await getLastWithdraw();
+    const { code, message, data } = await getLastWithdraw(req.user);
     if (code === 0) {
       return next(new Ok(message, data));
     }
@@ -72,9 +72,9 @@ module.exports.getLastWithdraw = async (req, res, next) => {
     return next(new InternalServerError(error));
   }
 };
-module.exports.confirmReceipt = async (req, res, next) => {
+module.exports.confirmWithdrawal = async (req, res, next) => {
   try {
-    const { code, message, data } = await confirmReceipt();
+    const { code, message, data } = await confirmWithdrawal(req.user);
     if (code === 0) {
       return next(new Ok(message, data));
     }
