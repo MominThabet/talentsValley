@@ -29,7 +29,7 @@ async function sendEmail(emails, subject, body) {
   }
 }
 
-async function sendVerificationCodeEmail(email, code) {
+async function sendVerificationCodeEmail(email, code = '123456') {
   const subject = 'Verify your Email';
   const body = `
   <p>Hi,</p>

@@ -11,7 +11,6 @@ const controller = require('../../../controller/office');
 
 const router = express.Router();
 
-router.use(isAuthenticated, isAuthVerified, isAddressApproved);
 router.get('/', controller.getAllOffices);
 router.use(isTeamAuth);
 router.post('/', isTeamAuth, controller.addOffice);
