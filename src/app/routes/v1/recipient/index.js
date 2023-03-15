@@ -10,7 +10,7 @@ router.get('/:id', controller.getRecipient); //get with details
 router.delete('/:id', controller.deleteRecipient); //delete
 
 router.post('/', [recipient, validateRequest], controller.addRecipient); //add
-router.put('/', [recipient, validateRequest], controller.editRecipient); //edit
+router.put('/:id', [recipient, validateRequest], controller.editRecipient); //edit
 
 router.post(
   '/addSendCode',
@@ -18,7 +18,7 @@ router.post(
   controller.sendCodeAdd
 ); // validate + check if user the
 router.post(
-  '/editSendCode',
+  '/editSendCode/:id',
   [recipient, validateRequest],
   controller.sendCodeEdit
 ); // validate + check if user the

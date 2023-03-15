@@ -10,6 +10,7 @@ const {
   deleteRecipient,
   sendCode,
   getRecipient,
+  sendCodeEdit,
 } = require('../../service/recipient');
 
 module.exports.getAllRecipient = async (req, res, next) => {
@@ -54,7 +55,8 @@ module.exports.addRecipient = async (req, res, next) => {
 
 module.exports.editRecipient = async (req, res, next) => {
   try {
-    const { code, message, data } = await editRecipient();
+    const id = req.params.id;
+    const { code, message, data } = await editRecipient(id, req.body, req.user);
     if (code === 0) {
       return next(new Ok(message, data));
     }
@@ -93,7 +95,8 @@ module.exports.sendCodeAdd = async (req, res, next) => {
 
 module.exports.sendCodeEdit = async (req, res, next) => {
   try {
-    const { code, message, data } = await sendCode();
+    const id = req.params.id;
+    const { code, message, data } = await sendCodeEdit(id, req.body, req.user);
     if (code === 0) {
       return next(new Ok(message, data));
     }
