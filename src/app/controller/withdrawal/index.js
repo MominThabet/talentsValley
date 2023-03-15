@@ -77,7 +77,10 @@ module.exports.getLastWithdraw = async (req, res, next) => {
 };
 module.exports.confirmWithdrawal = async (req, res, next) => {
   try {
-    const { code, message, data } = await confirmWithdrawal(req.user);
+    const { code, message, data } = await confirmWithdrawal(
+      req.user,
+      req.params.id
+    );
     if (code === 0) {
       return next(new Ok(message, data));
     }

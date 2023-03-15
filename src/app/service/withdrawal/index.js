@@ -133,8 +133,24 @@ module.exports.getLastWithdraw = async (user) => {
     throw new Error(error);
   }
 };
-module.exports.confirmWithdrawal = async (user) => {
+module.exports.confirmWithdrawal = async (user, withdrawId) => {
   try {
+    const withdraw = await Withdrawal.findOne({
+      _id: withdrawId,
+      userId: user._id,
+    });
+    if (!withdraw) {
+      return { code: 1, message: 'not found', data: null };
+    }
+    if (withdraw.status === 'Completed') {
+      return { code: 2, message: 'withdraw Completed', data: null };
+    }
+    if (withdraw.status !== 'Ready' || withdraw.status !== 'Sent') {
+      return { code: 2, message: 'not Ready withdraw' };
+    }
+    withdraw.status = 'Completed';
+    await withdraw.save();
+    return { code: 0, message: 'success withdraw completed', data: null };
   } catch (error) {
     console.log(error);
     throw new Error(error);
