@@ -5,7 +5,7 @@ const { handleError } = require('../src/utils/responses/error');
 
 const { Ok, Created } = require('./utils/responses/success/successes');
 const app = express();
-
+const { isAuthenticated } = require('./utils/middleware/auth/auth');
 app.disable('X-Powered-By');
 
 app.use(express.json());
@@ -13,6 +13,10 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cors());
 app.get('/', (req, res, next) => {
   next(new Created('hi', 'blue'));
+});
+
+app.get('/tokentest', isAuthenticated, (req, res) => {
+  return res.json(req.user);
 });
 
 app.use('/api/v1', require('./app/routes/mainRouter'));
