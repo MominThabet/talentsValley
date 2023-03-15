@@ -59,6 +59,7 @@ module.exports.addWithdraw = async (data, user) => {
       });
       await requestWithdrawal.create({
         withdrawalId: withdrawal._id,
+        action: 'send',
       });
       return {
         code: 0,
@@ -94,8 +95,25 @@ module.exports.addWithdraw = async (data, user) => {
     throw new Error(error);
   }
 };
-module.exports.cancelWithdraw = async (data) => {
+module.exports.cancelWithdraw = async (user, withdrawId) => {
   try {
+    const withdraw = await Withdrawal.findOne({
+      _id: withdrawId,
+      userId: user._id,
+    });
+
+    if (!withdraw) {
+      return { code: 1, message: 'no withdraw', data: null };
+    }
+
+    if (withdraw.status === 'Sent' || withdraw.status === 'Completed') {
+      return { code: 2, message: "can't cancel withdraw", data: null };
+    }
+    await requestWithdrawal.create({
+      withdrawalId: withdraw._id,
+      action: 'cancel',
+    });
+    return { code: 0, message: 'send cancel request', data: null };
   } catch (error) {
     console.log(error);
     throw new Error(error);
@@ -115,17 +133,17 @@ module.exports.getLastWithdraw = async (user) => {
     throw new Error(error);
   }
 };
-module.exports.confirmReceipt = async (data) => {
+module.exports.confirmWithdrawal = async (user) => {
   try {
   } catch (error) {
     console.log(error);
     throw new Error(error);
   }
 };
-module.exports.report = async (data) => {
-  try {
-  } catch (error) {
-    console.log(error);
-    throw new Error(error);
-  }
-};
+// module.exports.report = async (data) => {
+//   try {
+//   } catch (error) {
+//     console.log(error);
+//     throw new Error(error);
+//   }
+// };

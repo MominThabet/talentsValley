@@ -13,7 +13,7 @@ router.post('/', [withdrawal, validateRequest], controller.addWithdraw);
 
 router.put('/:id', controller.cancelWithdraw); // cancel depending on status
 
-router.put('/confirmWithdrawal', controller.confirmWithdrawal); // confirm receipt
+router.put('/confirmWithdrawal/:id', controller.confirmWithdrawal); // confirm receipt
 // router.post('/report', controller.report); //report problem => need mock model
 
 module.exports = router;

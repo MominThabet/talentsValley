@@ -5,6 +5,10 @@ const request = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: 'withdrawals',
     },
+    action: {
+      type: String,
+      enum: ['send', 'cancel'],
+    },
   },
   { timestamps: true }
 );

@@ -50,7 +50,10 @@ module.exports.addWithdraw = async (req, res, next) => {
 };
 module.exports.cancelWithdraw = async (req, res, next) => {
   try {
-    const { code, message, data } = await cancelWithdraw();
+    const { code, message, data } = await cancelWithdraw(
+      req.user,
+      req.params.id
+    );
     if (code === 0) {
       return next(new Ok(message, data));
     }
