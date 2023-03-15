@@ -15,5 +15,5 @@ router.use(isAuthenticated, isAuthVerified, isAddressApproved);
 
 router.use('/office', require('./v1/office'));
 router.use('/recipient', require('./v1/recipient'));
-
+router.use('/bank', require('./v1/bank'));
 module.exports = router;

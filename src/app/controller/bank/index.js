@@ -4,18 +4,18 @@ const {
 } = require('../../../utils/responses/error/errors');
 const { Ok, Created } = require('../../../utils/responses/success/successes');
 const {
-  getAllRecipient,
-  addRecipient,
-  editRecipient,
-  deleteRecipient,
+  getAllBank,
+  addBank,
+  editBank,
+  deleteBank,
   sendCode,
-  getRecipient,
+  getBank,
   sendCodeEdit,
-} = require('../../service/recipient');
+} = require('../../service/bank');
 
-module.exports.getAllRecipient = async (req, res, next) => {
+module.exports.getAllBank = async (req, res, next) => {
   try {
-    const { code, message, data } = await getAllRecipient(req.user);
+    const { code, message, data } = await getAllBank(req.user);
     if (code === 0) {
       return next(new Ok(message, data));
     }
@@ -26,10 +26,10 @@ module.exports.getAllRecipient = async (req, res, next) => {
   }
 };
 
-module.exports.getRecipient = async (req, res, next) => {
+module.exports.getBank = async (req, res, next) => {
   try {
-    const recipientId = req.params.id;
-    const { code, message, data } = await getRecipient(recipientId);
+    const BankId = req.params.id;
+    const { code, message, data } = await getBank(BankId);
     if (code === 0) {
       return next(new Ok(message, data));
     }
@@ -40,9 +40,9 @@ module.exports.getRecipient = async (req, res, next) => {
   }
 };
 
-module.exports.addRecipient = async (req, res, next) => {
+module.exports.addBank = async (req, res, next) => {
   try {
-    const { code, message, data } = await addRecipient(req.body, req.user);
+    const { code, message, data } = await addBank(req.body, req.user);
     if (code === 0) {
       return next(new Ok(message, data));
     }
@@ -53,10 +53,10 @@ module.exports.addRecipient = async (req, res, next) => {
   }
 };
 
-module.exports.editRecipient = async (req, res, next) => {
+module.exports.editBank = async (req, res, next) => {
   try {
     const id = req.params.id;
-    const { code, message, data } = await editRecipient(id, req.body, req.user);
+    const { code, message, data } = await editBank(id, req.body, req.user);
     if (code === 0) {
       return next(new Ok(message, data));
     }
@@ -67,12 +67,9 @@ module.exports.editRecipient = async (req, res, next) => {
   }
 };
 
-module.exports.deleteRecipient = async (req, res, next) => {
+module.exports.deleteBank = async (req, res, next) => {
   try {
-    const { code, message, data } = await deleteRecipient(
-      req.params.id,
-      req.user
-    );
+    const { code, message, data } = await deleteBank(req.params.id, req.user);
     if (code === 0) {
       return next(new Ok(message, data));
     }

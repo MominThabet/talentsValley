@@ -1,12 +1,18 @@
-const Recipient = require('../../../model/recipient');
+const Bank = require('../../../model/bank');
 const Verification = require('../../../model/verification');
 const {
   sendVerificationCodeEmail,
 } = require('../../../utils/notification/email');
 
-module.exports.addRecipient = async (data, user) => {
+module.exports.addBank = async (data, user) => {
   try {
-    const { verificationCode, name, phone, recipientId } = data;
+    const {
+      verificationCode,
+      bankAccountOwner,
+      branch,
+      accountNumber,
+      ledger,
+    } = data;
     let verification = await Verification.findOne({
       userId: user._id,
       email: user.email,
@@ -19,33 +25,41 @@ module.exports.addRecipient = async (data, user) => {
     if (verificationCode != verification.verificationCode) {
       return { code: 2, message: 'Wrong Verification Code', data: null };
     }
-    const isRecipient = await Recipient.findOne({
+    const isBank = await Bank.findOne({
       userId: user._id,
-      recipientId,
+      accountNumber,
       isDeleted: false,
     });
-    if (isRecipient) {
-      return { code: 1, message: 'recipient already exists', data: null };
+    if (isBank) {
+      return { code: 1, message: 'Bank already exists', data: null };
     }
-    const recipient = await Recipient.create({
+    const bank = await Bank.create({
       userId: user._id,
-      name,
-      phone,
-      recipientId,
+      bankAccountOwner,
+      branch,
+      accountNumber,
+      currency,
+      ledger,
     });
     return {
       code: 0,
-      message: 'recipient added successfully',
-      data: { userId: user._id, recipient },
+      message: 'bank added successfully',
+      data: { userId: user._id, bank },
     };
   } catch (error) {
     console.log(error);
     throw new Error(error);
   }
 };
-module.exports.editRecipient = async (id, data, user) => {
+module.exports.editBank = async (id, data, user) => {
   try {
-    const { verificationCode, name, phone, recipientId } = data;
+    const {
+      verificationCode,
+      bankAccountOwner,
+      branch,
+      accountNumber,
+      ledger,
+    } = data;
     let verification = await Verification.findOne({
       userId: user._id,
       email: user.email,
@@ -57,71 +71,72 @@ module.exports.editRecipient = async (id, data, user) => {
     if (verificationCode != verification.verificationCode) {
       return { code: 2, message: 'Wrong Verification Code', data: null };
     }
-    const recipient = await Recipient.findOne({
+    const bank = await Bank.findOne({
       userId: user._id,
-      _id: id,
+      accountNumber,
       isDeleted: false,
     });
-    if (!recipient) {
-      return { code: 1, message: "recipient doesn't exists", data: null };
+    if (!bank) {
+      return { code: 1, message: "bank doesn't exists", data: null };
     }
-    recipient.name = name;
-    recipient.phone = phone;
-    recipient.recipientId = recipientId;
-    await recipient.save();
-    return { code: 0, message: 'recipient updated', data: { recipient } };
+    bank.bankAccountOwner = bankAccountOwner;
+    bank.branch = branch;
+    bank.accountNumber = accountNumber;
+    bank.ledger = ledger;
+    await bank.save();
+    return { code: 0, message: 'bank updated', data: { bank } };
   } catch (error) {
     console.log(error);
     throw new Error(error);
   }
 };
-module.exports.deleteRecipient = async (id, user) => {
+module.exports.deleteBank = async (id, user) => {
   try {
-    const recipient = await Recipient.findOne({
+    const bank = await Bank.findOne({
       userId: user._id,
       _id: id,
       isDeleted: false,
     });
-    if (!recipient) {
-      return { code: 1, message: "recipient Doesn't exist", data: null };
+    if (!bank) {
+      return { code: 1, message: "bank Doesn't exist", data: null };
     }
-    recipient.isDeleted = true;
-    await recipient.save();
-    return { code: 0, message: 'recipient deleted', data: null };
+    bank.isDeleted = true;
+    await bank.save();
+    return { code: 0, message: 'bank deleted', data: null };
   } catch (error) {
     console.log(error);
     throw new Error(error);
   }
 };
 
-module.exports.getAllRecipient = async (user) => {
+module.exports.getAllBank = async (user) => {
   try {
-    const recipients = await Recipient.find({
+    const banks = await Bank.find({
       userId: user._id,
       isDeleted: false,
     });
-    if (recipients.length == 0) {
-      return { code: 1, message: 'no recipients', data: null };
+    if (banks.length == 0) {
+      return { code: 1, message: 'no banks', data: null };
     }
-    return { code: 0, message: 'all recipients', data: recipients };
+    return { code: 0, message: 'all banks', data: banks };
   } catch (error) {
     console.log(error);
     throw new Error(error);
   }
 };
-module.exports.getRecipient = async (id) => {
+module.exports.getBank = async (id) => {
   try {
-    const recipient = await Recipient.findOne({
+    const bank = await Bank.findOne({
       _id: id,
       isDeleted: false,
     });
-    if (!recipient) {
-      return { code: 1, message: "recipient dosen't exist", data: null };
+    if (!bank) {
+      return { code: 1, message: "bank dosen't exist", data: null };
     }
     return {
       code: 0,
       message: 'success',
-      data: { recipient },
+      data: { bank },
     };
   } catch (error) {
     console.log(error);
@@ -131,14 +146,14 @@ module.exports.getRecipient = async (id) => {
 
 module.exports.sendCode = async (data, user) => {
   try {
-    const { name, phone, recipientId } = data;
-    const isRecipient = await Recipient.findOne({
+    const { accountNumber } = data;
+    const isBank = await Bank.findOne({
       userId: user._id,
-      recipientId,
+      accountNumber,
       isDeleted: false,
     });
-    if (isRecipient) {
-      return { code: 1, message: 'recipient already exists', data: null };
+    if (isBank) {
+      return { code: 1, message: 'bank already exists', data: null };
     }
 
     let verification = await Verification.findOne({
@@ -167,14 +182,14 @@ module.exports.sendCode = async (data, user) => {
 
 module.exports.sendCodeEdit = async (id, data, user) => {
   try {
-    const { name, phone, recipientId } = data;
-    const isRecipient = await Recipient.findOne({
+    const { accountNumber } = data;
+    const isBank = await Bank.findOne({
       userId: user._id,
       _id: id,
       isDeleted: false,
     });
-    if (!isRecipient) {
-      return { code: 1, message: "recipient doesn't Exist", data: null };
+    if (!isBank) {
+      return { code: 1, message: "bank doesn't Exist", data: null };
     }
 
     let verification = await Verification.findOne({
