@@ -113,6 +113,7 @@ module.exports.getRecipient = async (id) => {
   try {
     const recipient = await Recipient.findOne({
       _id: id,
+      userId: user._id,
       isDeleted: false,
     });
     if (!recipient) {

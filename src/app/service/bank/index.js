@@ -127,6 +127,7 @@ module.exports.getBank = async (id) => {
   try {
     const bank = await Bank.findOne({
       _id: id,
+      userId: user._id,
       isDeleted: false,
     });
     if (!bank) {

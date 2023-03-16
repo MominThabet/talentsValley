@@ -3,8 +3,13 @@ const Bank = require('../../../model/bank');
 const Recipient = require('../../../model/recipient');
 const Withdrawal = require('../../../model/withdrawal');
 const requestWithdrawal = require('../../../model/requestWithdrawal');
-module.exports.getAllWithdraws = async (data) => {
+module.exports.getAllWithdraws = async (data, user) => {
   try {
+    const { offset, limit } = data;
+    const withdrawals = await Withdrawal.find({
+      userId: user._id,
+    });
+    return { code: 0, message: 'witd', data: withdrawals };
   } catch (error) {
     console.log(error);
     throw new Error(error);
@@ -47,6 +52,7 @@ module.exports.addWithdraw = async (data, user) => {
 
       const office = await Office.findOne({
         _id: officeId,
+        userId: user._id,
         isDeleted: false,
       });
       if (!office) {
@@ -55,6 +61,7 @@ module.exports.addWithdraw = async (data, user) => {
 
       const recipient = await Recipient.findOne({
         _id: recipientId,
+        userId: user._id,
         isDeleted: false,
       });
       if (!recipient) {
@@ -95,6 +102,7 @@ module.exports.addWithdraw = async (data, user) => {
       const { amount, bankId } = data;
       const bank = await Bank.findOne({
         _id: bankId,
+        userId: user._id,
         isDeleted: false,
       });
       if (!bank) {
