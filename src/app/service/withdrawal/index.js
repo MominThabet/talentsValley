@@ -5,10 +5,23 @@ const Withdrawal = require('../../../model/withdrawal');
 const requestWithdrawal = require('../../../model/requestWithdrawal');
 module.exports.getAllWithdraws = async (data, user) => {
   try {
-    const { offset, limit } = data;
+    // const { offset, limit } = data;
     const withdrawals = await Withdrawal.find({
       userId: user._id,
-    });
+    }).populate([
+      {
+        path: 'bank',
+        select: 'bankName bankAccountOwner branch accountNumber ',
+      },
+      {
+        path: 'office',
+        select: 'name address fees',
+      },
+      {
+        path: 'recipient',
+        select: 'name recipientId phone',
+      },
+    ]);
     return { code: 0, message: 'witd', data: withdrawals };
   } catch (error) {
     console.log(error);
