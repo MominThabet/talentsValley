@@ -4,20 +4,20 @@ const withdraw = new mongoose.Schema(
   {
     userId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'users',
+      ref: 'user',
       require: true,
     },
     bank: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'banks',
+      ref: 'bank',
     },
     recipient: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'recipients',
+      ref: 'recipient',
     },
     office: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'offices',
+      ref: 'office',
     },
     withdrawMethod: {
       type: String,

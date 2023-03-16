@@ -26,7 +26,7 @@ module.exports.getAllWithdraws = async (req, res, next) => {
 };
 module.exports.getWithdraw = async (req, res, next) => {
   try {
-    const { code, message, data } = await getWithdraw(req.params.id);
+    const { code, message, data } = await getWithdraw(req.params.id, req.user);
     if (code === 0) {
       return next(new Ok(message, data));
     }

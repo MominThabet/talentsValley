@@ -10,11 +10,26 @@ module.exports.getAllWithdraws = async (data) => {
     throw new Error(error);
   }
 };
-module.exports.getWithdraw = async (id) => {
+module.exports.getWithdraw = async (id, user) => {
   try {
     const withdraw = await Withdrawal.findOne({
       _id: id,
-    });
+      userId: user._id,
+    }).populate([
+      {
+        path: 'bank',
+        select: 'bankName bankAccountOwner branch accountNumber ',
+      },
+      {
+        path: 'office',
+        select: 'name address fees',
+      },
+      {
+        path: 'recipient',
+        select: 'name recipientId phone',
+      },
+    ]);
+
     if (!withdraw) {
       return { code: 1, message: "witdraw dosen't exist", data: null };
     }
@@ -67,6 +82,16 @@ module.exports.addWithdraw = async (data, user) => {
         data: { withdrawal },
       };
     } else if (withdrawMethod == 'Bank') {
+      const withdrals = Withdrawal.findOne({
+        userId: user._id,
+      });
+      if (!withdrals) {
+        return {
+          code: 1,
+          message: 'first witdrawal should be cash',
+          data: null,
+        };
+      }
       const { amount, bankId } = data;
       const bank = await Bank.findOne({
         _id: bankId,
