@@ -3,7 +3,7 @@ const Bank = require('../../../model/bank');
 const Recipient = require('../../../model/recipient');
 const Withdrawal = require('../../../model/withdrawal');
 const requestWithdrawal = require('../../../model/requestWithdrawal');
-module.exports.getAllWithdraws = async (data, user) => {
+module.exports.getAllWithdraws = async (user) => {
   try {
     // const { offset, limit } = data;
     const withdrawals = await Withdrawal.find({

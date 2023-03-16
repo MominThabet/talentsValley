@@ -14,7 +14,7 @@ const {
 } = require('../../../utils/responses/error/errors');
 module.exports.getAllWithdraws = async (req, res, next) => {
   try {
-    const { code, message, data } = await getAllWithdraws(req.params, req.user);
+    const { code, message, data } = await getAllWithdraws(req.user);
     if (code === 0) {
       return next(new Ok(message, data));
     }
